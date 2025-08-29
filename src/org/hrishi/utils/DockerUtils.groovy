@@ -10,11 +10,12 @@ class DockerUtils {
     //static push method
     static void pushImage (def script, String project, String tag, String credId = 'dockerCred') {
         script.withCredentials([script.usernamePassword(credentialsId: credId, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            script.sh '''#!/bin/bash -xe
+            script.sh """
+            set -xe
             docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
             docker image tag ${project}:${tag} ${DOCKER_USER}/${project}:${tag}
             docker push ${DOCKER_USER}/${project}:${tag}
-            '''
+        """
         }
     }
 
