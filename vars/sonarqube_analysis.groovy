@@ -1,5 +1,13 @@
 def call(String SonarQubeAPI, String Projectname, String ProjectKey){
-  withSonarQubeEnv("${SonarQubeAPI}"){
-    sh "$SONAR_HOME/bin/sonar-scanner -Dsonar.projectname=${Projectname} -Dsonar.projectKey=${ProjectKey} -X"
-  }
+    withSonarQubeEnv("${SonarQubeAPI}"){
+        sh """
+        cd spring-boot-server
+        mvn clean install -DskipTests
+        ${SONAR_HOME}/bin/sonar-scanner \
+            -Dsonar.projectKey=${ProjectKey} \
+            -Dsonar.projectName=${Projectname} \
+            -Dsonar.java.binaries=target/classes \
+            -X
+        """
+    }
 }
